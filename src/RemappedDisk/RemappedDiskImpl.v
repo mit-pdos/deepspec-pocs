@@ -80,7 +80,7 @@ Module RemappedDisk.
       - destruct op.
 
         + lift_world.
-          prog_spec_symbolic_execute inv_bg inv_step.
+          prog_spec_symbolic_execute inv_step.
 
           * solve_final_state.
             invert_abstraction.
@@ -125,14 +125,14 @@ Module RemappedDisk.
           all: pocs_admit.
 
         + lift_world.
-          prog_spec_symbolic_execute inv_bg inv_step.
+          prog_spec_symbolic_execute inv_step.
           solve_final_state.
           invert_abstraction.
           omega.
 
       - cannot_crash.
       - eapply then_init_compose; eauto.
-        prog_spec_symbolic_execute inv_bg inv_step.
+        prog_spec_symbolic_execute inv_step.
 
         + solve_final_state.
         + match_abstraction_for_step.

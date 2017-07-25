@@ -54,7 +54,7 @@ Module StatDB.
       - destruct op.
 
         + lift_world.
-          prog_spec_symbolic_execute inv_bg inv_step.
+          prog_spec_symbolic_execute inv_step.
           solve_final_state.
 
           unfold statdb_abstraction in *.
@@ -66,7 +66,7 @@ Module StatDB.
 
       - cannot_crash.
       - eapply then_init_compose; eauto.
-        prog_spec_symbolic_execute inv_bg inv_step.
+        prog_spec_symbolic_execute inv_step.
 
         solve_final_state.
 

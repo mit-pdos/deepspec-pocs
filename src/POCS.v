@@ -34,9 +34,32 @@ Ltac prog_spec_to_rexec :=
   let x := fresh in intro x; destruct x;
   intros.
 
-Ltac rexec_symex_finished inv_bg inv_step :=
-  inv_rexec; try cannot_crash;
-  repeat ( exec_steps || inv_bg || inv_step ).
+Ltac rexec_to_exec_finished :=
+  inv_rexec; try cannot_crash.
+
+Ltac case_destruct cond :=
+  destruct cond eqn:?; subst; simpl in *.
+
+Ltac symbolic_exec_one :=
+  match goal with
+  | H: exec ?p _ _ |- _ =>
+    match p with
+    | context[if ?expr then _ else _] => case_destruct expr
+    | context[match ?expr with _ => _ end] => case_destruct expr
+    end
+  | H: exec (Prim _ _) _ _ |- _ => eapply RExec in H
+  | H: exec (Ret _) _ _ |- _ => apply exec_ret in H; safe_intuition; subst
+  | H: exec (Bind _ _) _ _ |- _ => inv_exec' H
+  | H: exec _ _ _ |- _ => inv_exec' H
+  | H: rexec _ _ _ _ |- _ => eapply impl_ok in H; [ | eassumption | solve [ simpl; eauto ] ]
+  end.
+
+Ltac symbolic_exec_many :=
+  repeat symbolic_exec_one;
+  simpl in *; unfold pre_step in *; repeat deex.
+
+Ltac symbolic_exec inv_step :=
+  repeat ( symbolic_exec_many || inv_step ).
 
 Ltac match_abstraction_for_step :=
   match goal with
@@ -54,9 +77,10 @@ Ltac step_high_level_semantics :=
 Ltac lift_world :=
   apply spec_abstraction_compose.
 
-Ltac prog_spec_symbolic_execute inv_bg inv_step :=
+Ltac prog_spec_symbolic_execute inv_step :=
   prog_spec_to_rexec;
-  rexec_symex_finished inv_bg inv_step.
+  rexec_to_exec_finished;
+  symbolic_exec inv_step.
 
 Ltac solve_final_state :=
   match_abstraction_for_step;
