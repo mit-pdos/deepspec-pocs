@@ -21,7 +21,7 @@ Module RemappedDisk.
 
     Definition write (a : addr) (b : block) : prog unit :=
       (* Fill in your implementation here. *)
-      Ret tt.
+      Prim bd (BadWrite a b).
 
     Definition diskSize : prog nat :=
       len <- Prim bd (BadDiskSize);
