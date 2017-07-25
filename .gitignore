@@ -1,0 +1,26 @@
+/build
+/bin
+/.lia.cache
+.stack-work
+
+# emacs
+*.aux
+*.*~
+
+# vim
+*.swp
+
+# CoqIDE files
+\#*#
+
+# Coq compiled files
+*.vo
+*.v.d
+*.glob
+
+# created by remap-nbd
+/disk.img
+
+# created by replicate-nbd
+/disk0.img
+/disk1.img
