@@ -10,6 +10,11 @@ draw refinement diagram
     Implemented in Haskell
     No proof
 
+What is a disk?
+  Show generic disk
+    uninterpreted memory (See Upd.v)
+    with a domain (See Sized.v)
+
 Abstraction function
   draw picture of spec disk and code disk
     code disk has one more block
@@ -129,14 +134,23 @@ to use these techniques, first re-state the code-level semantics using [prog_spe
   [prog_spec] ghost state: here, typically tuple of disk + frame predicate
 
 src/ReplicatedDisk/ReplicatedDiskImpl.v
-  work through implementation of Read, DiskSize, DiskSizeInit, init_at, Init
-  walk through the proofs for each of them, interleaved with code
-
-pay attention to [descend] in DiskSizeInit: instantiate existential quantifiers
-  will need it for the [Write_ok] proof
+  work through implementations of Read, DiskSize, DiskSizeInit, init_at, Init
+    what if we didn't initialize?
+    of course our abstraction wouldn't hold, but so what?
+    could someone observe an incorrect behavior at the spec level?
+  walk through the proof of Read_ok
+  discuss Write_ok and write_read_ok specs
+  walk through the proof of DiskSize_ok: same as Read_ok, basically
+  discuss init_at_ok: induction because of fixpoint loop
+  walk through the proof of DiskSizeInit_ok
+    if we do two [step]s in a row, we get an [exists] subgoal
+    automation couldn't figure out how to instantiate the evars for precondition
+    reason: it depends on [r], the result of the first [DiskSize] call
+    [destruct r] first, now [step] can keep going through
 
 assignment:
+  git pull to get some small updates
   implement Write
   prove Write_ok
-  prove the sanity-checker: write_read_ok
+  prove the sanity-checker: write_read_check_ok
   optionally prove init_at_ok and Init_ok
