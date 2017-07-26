@@ -883,6 +883,7 @@ Module RD.
        *)
       eapply idempotent_loopspec; simpl.
       - eapply Recover_rok.
+      -
         pocs_admit.
     Qed.
 
