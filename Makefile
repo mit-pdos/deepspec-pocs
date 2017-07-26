@@ -14,6 +14,10 @@ CODE += $(wildcard src/BadSectorDisk/*.v)
 CODE += $(wildcard src/RemappedDisk/*.v)
 CODE += $(wildcard src/NBD/*.v)
 
+## For atomic pair lab
+CODE += $(wildcard src/OneDisk/*.v)
+CODE += $(wildcard src/AtomicPair/*.v)
+
 ## For disk mirroring lab
 CODE += $(wildcard src/TwoDisk/*.v)
 CODE += $(wildcard src/ReplicatedDisk/*.v)
@@ -28,7 +32,7 @@ default: $(patsubst %,bin/%,$(BINS))
 build/%.v: src/%.v
 	@mkdir -p $(@D)
 	@rm -f $@
-	@ln -s $(shell pwd)/$< $@
+	@ln -s "$(shell pwd)"/$< $@
 .PRECIOUS: build/%.v
 
 build/%.v.d: build/%.v $(patsubst src/%.v,build/%.v,$(CODE))
@@ -55,7 +59,7 @@ replicate-nbd/extract: build/ReplicatedDisk/Server.vo
 
 bin/%: %/extract
 	mkdir -p $(@D)
-	cd $(patsubst %/extract,%,$<) && PATH=$(PATH):$(shell pwd)/bin stack build --copy-bins --local-bin-path ../bin
+	cd $(patsubst %/extract,%,$<) && PATH=$(PATH):"$(shell pwd)"/bin stack build --copy-bins --local-bin-path ../bin
 
 .PHONY: clean
 clean:
